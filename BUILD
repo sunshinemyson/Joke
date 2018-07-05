@@ -53,12 +53,20 @@ cc_library(
     name = "tensorflow_native_libs",
     srcs = [
         ":libtensorflow_demo.so",
+        "//tensorflow/examples/android/snpe:libsnpe_demo.so",
         "//tensorflow/contrib/android:libtensorflow_inference.so",
     ],
     tags = [
         "manual",
         "notap",
     ],
+    deps = [
+        "//tensorflow/examples/android/snpe:snpe",
+        "//tensorflow/examples/android/snpe:snpe_adsp",
+        "//tensorflow/examples/android/snpe:symphony-cpu",
+        "//tensorflow/examples/android/snpe:symphonypower",
+        "//tensorflow/examples/android/snpe:stdcpp",
+    ]
 )
 
 android_binary(
