@@ -18,6 +18,13 @@ A device running Android 5.0 (API 21) or higher is required to run the demo due
 to the use of the camera2 API, although the native libraries themselves can run
 on API >= 14 devices.
 
+## SvenZ's comments
+Prepare to build android APK:
+1. Make sure you can build example along with Tensorflow offical source code
+    **Setup Android SDK/NDK in the WORKSPACE file under root directory, use ndk 14b**
+2. Replace offical content with this repository
+3. only bazel build tested
+
 ## Current samples:
 
 1. [TF Classify](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/examples/android/src/org/tensorflow/demo/ClassifierActivity.java):
