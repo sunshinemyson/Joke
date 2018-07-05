@@ -28,6 +28,7 @@
 #include <iostream>
 
 #include "CheckRuntime.hpp"
+#include "android_log.hpp"
 
 #include "SNPE/SNPE.hpp"
 #include "SNPE/SNPEFactory.hpp"
@@ -35,16 +36,25 @@
 #include "DlSystem/DlEnums.hpp"
 #include "DlSystem/String.hpp"
 
+static const char* TAG = "snpe";
+
 // Command line settings
 zdl::DlSystem::Runtime_t checkRuntime()
 {
     static zdl::DlSystem::Version_t Version = zdl::SNPE::SNPEFactory::getLibraryVersion();
     static zdl::DlSystem::Runtime_t Runtime;
 
-    std::cout << "SNPE Version: " << Version.asString().c_str() << std::endl; //Print Version number
+    //std::cout << "SNPE Version: " << Version.asString().c_str() << std::endl; //Print Version number
+    LOGI("%s-%s:line %d >> SNPE Version:%s", __FILE__, __FUNCTION__, __LINE__, Version.asString().c_str());
 
     if (zdl::SNPE::SNPEFactory::isRuntimeAvailable(zdl::DlSystem::Runtime_t::GPU)) {
         Runtime = zdl::DlSystem::Runtime_t::GPU;
+        LOGI("SNPE backend support GPU");
+    }
+
+    if(zdl::SNPE::SNPEFactory::isRuntimeAvailable(zdl::DlSystem::Runtime_t::DSP)) {
+        Runtime = zdl::DlSystem::Runtime_t::DSP;
+        LOGI("SNPE backend support DSP");
     } else {
         Runtime = zdl::DlSystem::Runtime_t::CPU;
     }
