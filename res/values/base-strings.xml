@@ -21,4 +21,5 @@
     <string name="activity_name_detection">TF Detect</string>
     <string name="activity_name_stylize">TF Stylize</string>
     <string name="activity_name_speech">TF Speech</string>
+    <string name="activity_name_snpe_demo">SNPE_demo</string>
 </resources>

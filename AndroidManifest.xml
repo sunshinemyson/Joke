@@ -73,6 +73,17 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--SvenZ-->
+        <activity android:name="org.tensorflow.demo.SnpeDemoActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/activity_name_snpe_demo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
