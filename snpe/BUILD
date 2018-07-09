@@ -26,7 +26,7 @@ cc_binary(
     includes = [
         "include/zdl",
     ],
-    copts = tf_copts(),
+    copts = tf_copts() + ["-fexceptions"],
     linkopts = [
         "-landroid",
         "-ldl",

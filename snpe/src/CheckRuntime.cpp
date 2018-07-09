@@ -36,7 +36,7 @@
 #include "DlSystem/DlEnums.hpp"
 #include "DlSystem/String.hpp"
 
-static const char* TAG = "snpe";
+static const char* TAG = "snpe_jni";
 
 // Command line settings
 zdl::DlSystem::Runtime_t checkRuntime()
