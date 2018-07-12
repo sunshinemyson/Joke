@@ -53,11 +53,12 @@ zdl::DlSystem::Runtime_t checkRuntime()
     }
 
     if(zdl::SNPE::SNPEFactory::isRuntimeAvailable(zdl::DlSystem::Runtime_t::DSP)) {
-        Runtime = zdl::DlSystem::Runtime_t::DSP;
+        Runtime = zdl::DlSystem::Runtime_t::DSP; // todo: fix crash while create userbuffer
         LOGI("SNPE backend support DSP");
     } else {
         Runtime = zdl::DlSystem::Runtime_t::CPU;
     }
+    Runtime = zdl::DlSystem::Runtime_t::CPU;
 
     return Runtime;
 }

@@ -77,3 +77,13 @@ cc_import(
     name = "stdcpp",
     shared_library = "lib/arm-android-gcc4.9/libgnustl_shared.so"
 )
+
+cc_import(
+    name = "dspRT_v65",
+    shared_library = "lib/dsp/libsnpe_dsp_v65_skel.so"
+)
+
+cc_import(
+    name = "dspRT_non_v65",
+    shared_library = "lib/dsp/libsnpe_dsp_skel.so"
+)

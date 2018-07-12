@@ -32,10 +32,12 @@
 #include "DlSystem/DlEnums.hpp"
 #include "DlSystem/UDLFunc.hpp"
 #include "DlContainer/IDlContainer.hpp"
+#include "DlSystem/TensorShapeMap.hpp"
 
 std::unique_ptr<zdl::SNPE::SNPE> setBuilderOptions(std::unique_ptr<zdl::DlContainer::IDlContainer> & container,
                                                    zdl::DlSystem::Runtime_t runtime,
                                                    zdl::DlSystem::UDLBundle udlBundle,
-                                                   bool useUserSuppliedBuffers);
+                                                   bool useUserSuppliedBuffers,
+                                                   const zdl::DlSystem::TensorShapeMap&);
 
 #endif

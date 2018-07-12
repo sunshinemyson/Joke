@@ -34,10 +34,12 @@
 std::unique_ptr<zdl::SNPE::SNPE> setBuilderOptions(std::unique_ptr<zdl::DlContainer::IDlContainer> & container,
                                                    zdl::DlSystem::Runtime_t runtime,
                                                    zdl::DlSystem::UDLBundle udlBundle,
-                                                   bool useUserSuppliedBuffers)
+                                                   bool useUserSuppliedBuffers,
+                                                   const zdl::DlSystem::TensorShapeMap& inputDim)
 {
     std::unique_ptr<zdl::SNPE::SNPE> snpe;
     zdl::SNPE::SNPEBuilder snpeBuilder(container.get());
+    // snpeBuilder.setInputDimensions(inputDim);
     snpe = snpeBuilder.setOutputLayers({})
        .setRuntimeProcessor(runtime)
        .setUdlBundle(udlBundle)

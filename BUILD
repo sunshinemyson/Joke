@@ -66,6 +66,8 @@ cc_library(
         "//tensorflow/examples/android/snpe:symphony-cpu",
         "//tensorflow/examples/android/snpe:symphonypower",
         "//tensorflow/examples/android/snpe:stdcpp",
+        "//tensorflow/examples/android/snpe:dspRT_v65",
+        "//tensorflow/examples/android/snpe:dspRT_non_v65",
     ]
 )
 

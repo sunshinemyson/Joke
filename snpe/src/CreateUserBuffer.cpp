@@ -42,6 +42,9 @@
 #include "DlSystem/IUserBuffer.hpp"
 #include "DlSystem/IUserBufferFactory.hpp"
 #include "DlSystem/UserBufferMap.hpp"
+#include "android_log.hpp"
+
+const char* TAG = "snpe_jni";
 
 void createUserBuffer(zdl::DlSystem::UserBufferMap& userBufferMap,
                       std::unordered_map<std::string, std::vector<uint8_t>>& applicationBuffers,
@@ -55,6 +58,7 @@ void createUserBuffer(zdl::DlSystem::UserBufferMap& userBufferMap,
 
    // calculate the size of buffer required by the input tensor
    const zdl::DlSystem::TensorShape& bufferShape = (*bufferAttributesOpt)->getDims();
+   LOGI("DLSystem:> %s|%s:%d", __FILE__, __FUNCTION__, __LINE__);
 
    // calculate stride based on buffer strides
    // Note: Strides = Number of bytes to advance to the next element in each dimension.
@@ -73,17 +77,17 @@ void createUserBuffer(zdl::DlSystem::UserBufferMap& userBufferMap,
 
    // set the buffer encoding type
    zdl::DlSystem::UserBufferEncodingFloat userBufferEncodingFloat;
-
+    LOGI("DLSystem:> %s|%s:%d", __FILE__, __FUNCTION__, __LINE__);
    // create user-backed storage to load input data onto it
    applicationBuffers.emplace(name, std::vector<uint8_t>(bufSize));
-
+LOGI("DLSystem:> %s|%s:%d", __FILE__, __FUNCTION__, __LINE__);
    // create SNPE user buffer from the user-backed buffer
    zdl::DlSystem::IUserBufferFactory& ubFactory = zdl::SNPE::SNPEFactory::getUserBufferFactory();
    snpeUserBackedBuffers.push_back(ubFactory.createUserBuffer(applicationBuffers.at(name).data(),
                                                               bufSize,
                                                               strides,
                                                               &userBufferEncodingFloat));
-
+LOGI("DLSystem:> %s|%s:%d", __FILE__, __FUNCTION__, __LINE__);
    // add the user-backed buffer to the inputMap, which is later on fed to the network for execution
    userBufferMap.add(name, snpeUserBackedBuffers.back().get());
 }
@@ -94,8 +98,12 @@ void createInputBufferMap(zdl::DlSystem::UserBufferMap& inputMap,
                           std::unique_ptr<zdl::SNPE::SNPE>& snpe)
 {
    // get input tensor names of the network that need to be populated
+   LOGI("DLSystem:> %s|%s:%d", __FILE__, __FUNCTION__, __LINE__);
    const auto& inputNamesOpt = snpe->getInputTensorNames();
-   if (!inputNamesOpt) throw std::runtime_error("Error obtaining input tensor names");
+   if (!inputNamesOpt) {
+       LOGI("DLSystem:> %s|%s:%d", __FILE__, __FUNCTION__, __LINE__);
+       throw std::runtime_error("Error obtaining input tensor names");
+   }
    const zdl::DlSystem::StringList& inputNames = *inputNamesOpt;
    assert(inputNames.size() > 0);
 
