@@ -8,27 +8,42 @@
 #include <algorithm>
 #include "CheckRuntime.hpp"
 #include "CreateUserBuffer.hpp"
+#include "DlSystem/TensorShapeMap.hpp"
 #include "ExecuteNetwork.hpp"
 #include "LoadContainer.hpp"
 #include "SetBuilderOptions.hpp"
 #include "Util.hpp"
 #include "android_log.hpp"
-#include "DlSystem/TensorShapeMap.hpp"
+#include "DiagLog/IDiagLog.hpp"
 
 namespace {
 static const char* TAG = "snpe_jni";
 }
+
+bool loadModel = true;
+std::unique_ptr<zdl::SNPE::SNPE> snpe;
+zdl::DlSystem::UserBufferMap inputMap, outputMap;
+std::vector<std::unique_ptr<zdl::DlSystem::IUserBuffer>>
+    snpeUserBackedInputBuffers, snpeUserBackedOutputBuffers;
+std::unordered_map<std::string, std::vector<uint8_t>> applicationInputBuffers,
+    applicationOutputBuffers;
 
 bool feedNetworkInput(std::unordered_map<std::string, std::vector<uint8_t>>&,
                       void*, const AndroidBitmapInfo&);
 
 void displayOutput(std::unordered_map<std::string, std::vector<uint8_t>>&);
 
+bool setupDialogFile(std::unique_ptr<zdl::SNPE::SNPE>& snpeObj);
+
 // Java_org_tensorflow_demo_SnpeDemoActivity_snpe_demo_main
 extern "C" JNIEXPORT void JNICALL
 Java_org_tensorflow_demo_SnpeDemoActivity_snpe_1demo_1main(
     JNIEnv* env, jobject* instance, jstring dlcFilePath, jstring dspRuntimePath,
     jobject jbitmap) {
+
+if (loadModel)
+{//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  loadModel = false;
   {
     LOGI("SNPE Native: Setup DSP runtime ");
     std::string dspRuntimePath_(
@@ -69,17 +84,12 @@ Java_org_tensorflow_demo_SnpeDemoActivity_snpe_1demo_1main(
   }
 
   LOGI("SNPE Native: Set Network Builder Options");
-  std::unique_ptr<zdl::SNPE::SNPE> snpe =
-      setBuilderOptions(dlcContainer, rt, zdl::DlSystem::UDLBundle(),
-                        true /*useUserSuppliedBuffers*/, inputShape);
+  // std::unique_ptr<zdl::SNPE::SNPE> snpe =
+  snpe = setBuilderOptions(dlcContainer, rt, zdl::DlSystem::UDLBundle(),
+                           true /*useUserSuppliedBuffers*/, inputShape);
   LOGI("SNPE Native: Set Network Builder Options done");
 
   LOGI("SNPE Native: Create UserBuffer");
-  zdl::DlSystem::UserBufferMap inputMap, outputMap;
-  std::vector<std::unique_ptr<zdl::DlSystem::IUserBuffer>>
-      snpeUserBackedInputBuffers, snpeUserBackedOutputBuffers;
-  std::unordered_map<std::string, std::vector<uint8_t>> applicationInputBuffers,
-      applicationOutputBuffers;
   {
     createInputBufferMap(inputMap, applicationInputBuffers,
                          snpeUserBackedInputBuffers, snpe);
@@ -113,6 +123,9 @@ Java_org_tensorflow_demo_SnpeDemoActivity_snpe_1demo_1main(
     LOGI("SNPE Native: Create UserBuffer done");
   }
 
+  setupDialogFile(snpe);
+
+} //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   LOGI("SNPE Native: Feed In data");
   {
     void* framebuf_addr = nullptr;
@@ -186,4 +199,28 @@ void displayOutput(
       [&](const std::pair<std::string, std::vector<uint8_t>> outPair) {
         // todo
       });
+}
+
+bool setupDialogFile(std::unique_ptr<zdl::SNPE::SNPE>& snpeObj)
+{
+  auto logger_opt = snpeObj->getDiagLogInterface();
+    if (!logger_opt) throw std::runtime_error("SNPE failed to obtain logging interface");
+    auto logger = *logger_opt;
+    auto opts = logger->getOptions();
+    //auto logfileName = "/storage/emulated/0/Android/data/org.tensorflow.demo/files/snpe.dia";
+    auto OutputDir = "/storage/emulated/0/Android/data/org.tensorflow.demo/files";
+
+    opts.LogFileDirectory = OutputDir;
+    if(!logger->setOptions(opts)) {
+        std::cerr << "Failed to set options" << std::endl;
+        LOGE("SNPE Native: Failed to set options : exit program");
+        std::exit(1);
+    }
+    if (!logger->start()) {
+        std::cerr << "Failed to start logger" << std::endl;
+        LOGE("SNPE Native: Failed to start logger : exit program");
+        std::exit(1);
+    }
+
+    return true;
 }
